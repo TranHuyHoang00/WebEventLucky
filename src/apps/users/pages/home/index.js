@@ -9,7 +9,7 @@ import img_store from '../../../../assets/images/store.jpg';
 import img_my_present from '../../../../assets/images/my_present.jpg';
 import { get_local_account, set_local_account, remove_local_account } from '../../../../auths/local_storage';
 import { banner_footer, banner_header } from '../../components/marquee';
-import { Space, Tooltip, Avatar, Progress, message } from 'antd';
+import { Space, Avatar, Progress, message } from 'antd';
 import { RiAddCircleFill } from "react-icons/ri";
 import ModalResult from './modals/result';
 import ModalHistory from './modals/history';
@@ -34,6 +34,7 @@ class index extends Component {
             status_modal_my_present: false,
             status_modal_facebook: false,
             status_modal_mission: false,
+            status_re_connect: false,
 
         }
     }
@@ -146,18 +147,26 @@ class index extends Component {
         if (result == false) {
             this.setState({ status_modal_facebook: value })
         } else {
-            message.success('Thành công, bấm "Nhận tất cả" để nhận quà', [10]);
-            message.success('Thành công, nhận 2 xu', [5]);
-            data_profile.is_facebook = true;
-            data_profile.coin = data_profile.coin + 2;
-            let result = remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_USER);
-            if (result == true) {
-                set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_USER, data_profile)
+            if (this.state.status_re_connect == true) {
+                message.success('Kết nối lại thành công', [5]);
+                this.setState({
+                    status_modal_facebook: value,
+                    data_profile: data_profile,
+                })
+            } else {
+                message.success('Thành công, bấm "Nhận tất cả" để nhận quà', [5]);
+                message.success('Thành công, nhận 2 xu', [2]);
+                data_profile.is_facebook = true;
+                data_profile.coin = data_profile.coin + 2;
+                let result = remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_USER);
+                if (result == true) {
+                    set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_USER, data_profile)
+                }
+                this.setState({
+                    status_modal_facebook: value,
+                    data_profile: data_profile,
+                })
             }
-            this.setState({
-                status_modal_facebook: value,
-                data_profile: data_profile,
-            })
         }
     }
     handle_get_present = () => {
@@ -174,6 +183,12 @@ class index extends Component {
     }
     handle_mission = (value) => {
         this.setState({ status_modal_mission: value })
+    }
+    handle_re_connect = (value, value1) => {
+        this.setState({
+            status_re_connect: value,
+            status_modal_facebook: value1,
+        })
     }
     render() {
         let data_profile = this.state.data_profile;
@@ -195,12 +210,10 @@ class index extends Component {
                         <Space className='bg-black bg-opacity-70 px-[8px] py-[5px] rounded-full'>
                             <img src={img_coin} className='w-[30px] h-auto' />
                             <span className='text-[16px] text-white font-[600] '>X {data_profile.coin}</span>
-                            <Tooltip placement="bottomRight" title="Thêm xu">
-                                <a onClick={() => this.handle_mission(true)}
-                                    className='text-[28px] text-[#02e31d] '>
-                                    <RiAddCircleFill />
-                                </a>
-                            </Tooltip>
+                            <a onClick={() => this.handle_mission(true)}
+                                className='text-[28px] text-[#02e31d] '>
+                                <RiAddCircleFill />
+                            </a>
                         </Space>
                     </div>
                 </header>
@@ -242,7 +255,7 @@ class index extends Component {
                             className='space-y-[5px] cursor-pointer '>
                             <img src={img_envelope} className='h-[180px] w-auto animate-wave1 ' />
                             <div className='flex items-center justify-center bg-black bg-opacity-50 rounded-full'>
-                                <button className='bg-gradient-to-r from-[#fce303] via-[#fca503] to-[#fc4503]
+                                <button className='bg-[#fca503]
                             border-[#524f4e] border shadow-sm
                              w-full py-[8px] mt-[15px] mx-[10px] my-[5px] rounded-full
                              text-[20px] text-white 
@@ -284,7 +297,8 @@ class index extends Component {
                     status_modal_mission={this.state.status_modal_mission}
                     handle_mission={this.handle_mission}
                     data_profile={this.state.data_profile}
-                    handle_facebook={this.handle_facebook} />
+                    handle_facebook={this.handle_facebook}
+                    handle_re_connect={this.handle_re_connect} />
             </div>
         );
     }

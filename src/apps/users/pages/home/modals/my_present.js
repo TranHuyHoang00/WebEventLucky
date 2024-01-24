@@ -34,12 +34,12 @@ class my_present extends Component {
                     <div className='space-y-[10px]'>
                         <div className='flex items-center justify-between'>
                             <Button onClick={() => this.handle_get_present(data_profile)}
-                                className='bg-[#05a60b] text-white' size='middle'>Nhận tất cả</Button>
+                                className='bg-[#05a60b] text-white' size='large'>Nhận tất cả</Button>
                             <div className='flex items-center justify-center space-x-[3px]'>
                                 {data_profile.is_facebook == false ?
-                                    <span className='text-[12px] font-[600] text-red-600'>Chưa liên kết</span>
+                                    <span className='text-[12px] font-[600] text-red-600'>Chưa kết nối</span>
                                     :
-                                    <span className='text-[12px] font-[600] text-green-600'>Đã liên kết</span>
+                                    <span className='text-[12px] font-[600] text-green-600'>Đã kết nối</span>
                                 }
                                 <FacebookFilled className='text-[22px] text-blue-500' />
                                 <Switch size="small" disabled
