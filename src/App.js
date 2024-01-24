@@ -5,12 +5,15 @@ import Index from './apps/index';
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import { Analytics } from '@vercel/analytics/react';
+
 function App() {
 
   return (
 
     <div>
       <Index />
+      <Analytics />
       <ToastContainer
         position="top-left"
         autoClose={5000}
